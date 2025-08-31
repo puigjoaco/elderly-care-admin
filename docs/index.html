@@ -210,9 +210,9 @@
             
             <div class="service-card">
                 <h3>⚙️ Backend API</h3>
-                <p>Node.js + Express</p>
-                <p><strong>Estado:</strong> 🔄 Configurando</p>
-                <a href="#" onclick="checkAPI()">Test API</a>
+                <p>Node.js + Express (Render.com)</p>
+                <p><strong>Estado:</strong> 🔄 Verificando...</p>
+                <a href="https://elderly-care-backend.onrender.com" target="_blank">Ver API</a>
             </div>
             
             <div class="service-card">
@@ -242,18 +242,39 @@
         </div>
     </div>
     
+    <script src="static/api-config.js"></script>
     <script>
-        function checkAPI() {
-            fetch('https://elderly-care-backend.onrender.com/health')
-                .then(res => res.json())
-                .then(data => alert('API Status: ' + JSON.stringify(data)))
-                .catch(err => alert('API offline o en proceso de despliegue'));
+        async function checkAPI() {
+            try {
+                const health = await apiCall('/health');
+                alert('✅ API Online!\n\n' + JSON.stringify(health, null, 2));
+                
+                // Update the service card to show online
+                const apiCard = document.querySelector('.service-card:nth-child(3)');
+                apiCard.classList.add('online');
+                apiCard.querySelector('p:nth-child(3)').innerHTML = '<strong>Estado:</strong> ✅ Online';
+            } catch (err) {
+                alert('⏳ API iniciando...\n\nEl servidor gratuito puede tardar 30-60 segundos en iniciar.\nIntente nuevamente en un momento.');
+            }
         }
         
-        // Auto-refresh para mostrar estado
-        setTimeout(() => {
-            console.log('Sistema operativo');
-        }, 3000);
+        // Check API health on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('Verificando estado del sistema...');
+            
+            // Check backend API status
+            try {
+                const health = await apiCall('/health');
+                if (health.status === 'OK') {
+                    const apiCard = document.querySelector('.service-card:nth-child(3)');
+                    apiCard.classList.add('online');
+                    apiCard.querySelector('p:nth-child(3)').innerHTML = '<strong>Estado:</strong> ✅ Online';
+                    console.log('Backend API: Online');
+                }
+            } catch (err) {
+                console.log('Backend API: Iniciando...');
+            }
+        });
     </script>
 </body>
 </html>
