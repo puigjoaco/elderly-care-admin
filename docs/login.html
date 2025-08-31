@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ElderCare Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+        }
+        
+        .login-left {
+            flex: 1;
+            padding: 3rem;
+            color: white;
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            .login-left {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .brand-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .features {
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .feature-content p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .login-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: #f7f8fc;
+        }
+        
+        .login-form-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-header p {
+            color: #6b7280;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .test-credentials {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f3f4ff 0%, #f9f5ff 100%);
+            border: 1px solid #e0d9ff;
+            border-radius: 12px;
+        }
+        
+        .test-credentials-header {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #5b21b6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mono {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            display: block;
+            margin-top: 0.25rem;
+            color: #6b21a8;
+        }
+        
+        .alert {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: #991b1b;
+            font-size: 0.875rem;
+            display: none;
+        }
+        
+        .alert.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Panel Izquierdo -->
+        <div class="login-left">
+            <div>
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 8.5C21 5.46243 18.5376 3 15.5 3C13.2894 3 11.4182 4.46819 10.6518 6.5M7.5 13.5C9.98528 13.5 12 11.4853 12 9C12 6.51472 9.98528 4.5 7.5 4.5C5.01472 4.5 3 6.51472 3 9C3 11.4853 5.01472 13.5 7.5 13.5ZM7.5 13.5C3.35786 13.5 0 16.8579 0 21H15C15 16.8579 11.6421 13.5 7.5 13.5Z"/>
+                        </svg>
+                    </div>
+                    <h1>ElderCare Pro</h1>
+                </div>
+                <p style="font-size: 1.1rem; opacity: 0.95; margin-bottom: 3rem;">
+                    Sistema avanzado de supervisión y cuidado para adultos mayores
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Seguridad Garantizada</h3>
+                        <p>Protección avanzada con verificación en tiempo real</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Monitoreo 24/7</h3>
+                        <p>Seguimiento continuo de actividades y medicación</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Gestión Familiar</h3>
+                        <p>Coordinación efectiva entre familiares y cuidadores</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: auto; opacity: 0.7; font-size: 0.875rem;">
+                © 2024 ElderCare Pro. Todos los derechos reservados.
+            </div>
+        </div>
+
+        <!-- Panel Derecho - Formulario -->
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2>Bienvenido de vuelta</h2>
+                    <p>Ingresa tus credenciales para acceder al sistema</p>
+                </div>
+
+                <div id="error-alert" class="alert">
+                    Error al iniciar sesión
+                </div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label">Correo electrónico</label>
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-input"
+                            placeholder="admin@ejemplo.com"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contraseña</label>
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" />
+                            <span>Recordarme</span>
+                        </label>
+                        <a href="#" style="color: #667eea; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <div class="test-credentials">
+                    <div class="test-credentials-header">Credenciales de prueba</div>
+                    <div>
+                        Usuario de demostración:
+                        <span class="mono">puig.joaco@gmail.com</span>
+                        <span class="mono">Contraseña: Puig1796</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulación de login
+            if (email === 'puig.joaco@gmail.com' && password === 'Puig1796') {
+                alert('¡Login exitoso! Redirigiendo al dashboard...');
+                window.location.href = '/dashboard';
+            } else {
+                document.getElementById('error-alert').classList.add('show');
+                document.getElementById('error-alert').textContent = 'Credenciales incorrectas';
+            }
+        });
+    </script>
+</body>
+</html>
