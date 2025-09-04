@@ -198,7 +198,7 @@
                 <h3>📊 Base de Datos</h3>
                 <p>Supabase PostgreSQL</p>
                 <p><strong>Estado:</strong> ✅ Online</p>
-                <a href="https://jqmoiucwqefkcectmafh.supabase.co" target="_blank">Ver Dashboard</a>
+                <a href="https://supabase.com/dashboard/project/jqmoiucwqefkcectmafh" target="_blank">Ver Dashboard</a>
             </div>
             
             <div class="service-card">
@@ -242,18 +242,42 @@
         </div>
     </div>
     
+    <script src="js/api-config.js"></script>
     <script>
-        function checkAPI() {
-            fetch('https://elderly-care-backend.onrender.com/health')
-                .then(res => res.json())
-                .then(data => alert('API Status: ' + JSON.stringify(data)))
-                .catch(err => alert('API offline o en proceso de despliegue'));
+        async function checkAPI() {
+            try {
+                const health = await apiCall(API_CONFIG.endpoints.health);
+                alert('✅ API Status: ' + JSON.stringify(health, null, 2));
+                
+                // Update the backend card status
+                const backendCard = document.querySelector('.service-card:nth-child(3)');
+                if (backendCard) {
+                    backendCard.classList.add('online');
+                    backendCard.querySelector('p:nth-child(3)').innerHTML = '<strong>Estado:</strong> ✅ Online';
+                }
+            } catch (error) {
+                alert('⏳ API está iniciando (el servidor gratuito tarda 30-60 segundos en despertar). Por favor intenta de nuevo en un momento.');
+            }
         }
         
-        // Auto-refresh para mostrar estado
-        setTimeout(() => {
-            console.log('Sistema operativo');
-        }, 3000);
+        // Auto-check backend status on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            setTimeout(async () => {
+                try {
+                    const health = await apiCall(API_CONFIG.endpoints.health);
+                    console.log('Backend Status:', health);
+                    
+                    // Update backend card
+                    const backendCard = document.querySelector('.service-card:nth-child(3)');
+                    if (backendCard && health.status === 'OK') {
+                        backendCard.classList.add('online');
+                        backendCard.querySelector('p:nth-child(3)').innerHTML = '<strong>Estado:</strong> ✅ Online';
+                    }
+                } catch (error) {
+                    console.log('Backend starting up...');
+                }
+            }, 2000);
+        });
     </script>
 </body>
 </html>
